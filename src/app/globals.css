@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+/* Growvia design system — light. App canvas = soft gray, cards = white,
+   accent = indigo→violet, ink = navy.
+   (Public marketing pages set their own white background via brand.ts.) */
+:root {
+  --background: #F7F9FC;   /* soft gray app canvas (polished) */
+  --background-2: #ffffff;
+  --elevated: #FBFCFF;     /* elevated inputs / insets */
+  --foreground: #0B1220;   /* navy ink */
+  --muted: #5A5D69;
+  --faint: #94A3B8;        /* tertiary labels */
+  --accent: #1B74D0;       /* Growvia blue — brightened, matches public site */
+  --accent-2: #1B74D0;     /* primary buttons */
+  --violet: #3E93EC;       /* bright supporting blue (was violet) */
+  --card: #ffffff;         /* white cards */
+  --border: #E8EDF6;       /* hairline border */
+  --border-strong: #D9E2F0;
+  --track: #E9EBF1;        /* progress/ring track */
+  --shadow-soft: 0 12px 32px rgba(15, 23, 42, 0.06);
+  --shadow-lift: 0 18px 40px rgba(15, 23, 42, 0.10);
+  --radius-card: 16px;
+
+  /* Tinted icon-well pairs (10% fill + solid glyph). */
+  --well-indigo-bg: rgba(27, 116, 208, 0.10);  --well-indigo-fg: #1B74D0;
+  --well-violet-bg: rgba(62, 147, 236, 0.12);  --well-violet-fg: #3E93EC;
+  --well-blue-bg:   rgba(30, 93, 250, 0.10);   --well-blue-fg:   #1E5DFA;
+  --well-green-bg:  rgba(16, 185, 129, 0.12);  --well-green-fg:  #10B981;
+  --well-orange-bg: rgba(245, 158, 11, 0.12);  --well-orange-fg: #F59E0B;
+  --well-red-bg:    rgba(239, 68, 68, 0.10);   --well-red-fg:    #EF4444;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --font-sans: var(--font-poppins);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+body {
+  font-family: var(--font-poppins), system-ui, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+  min-height: 100vh;
+}
+
+/* Crisper text rendering — the difference between "soft" and "sharp". */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Growvia dashboard polish layer (Nexora-inspired) ──────────────────
+   Shared classes for the authenticated shell + pages. Kept tiny; component
+   markup lives in src/components/ui.tsx. */
+
+/* The Jakarta-driven dashboard surface (set on the authed shell wrapper). */
+.gv-dash { font-family: var(--font-jakarta), var(--font-poppins), system-ui, sans-serif; }
+
+/* Card / panel hover lift. */
+.gv-lift { transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease; }
+.gv-lift:hover { box-shadow: var(--shadow-lift); transform: translateY(-2px); }
+
+/* Tinted icon well. */
+.gv-well {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.gv-well i { font-size: 20px; line-height: 1; }
+.gv-well-sm { width: 32px; height: 32px; border-radius: 8px; }
+.gv-well-sm i { font-size: 16px; }
+.gv-well-lg { width: 48px; height: 48px; border-radius: 12px; }
+.gv-well-lg i { font-size: 24px; }
+.well-indigo { background: var(--well-indigo-bg); color: var(--well-indigo-fg); }
+.well-violet { background: var(--well-violet-bg); color: var(--well-violet-fg); }
+.well-blue   { background: var(--well-blue-bg);   color: var(--well-blue-fg); }
+.well-green  { background: var(--well-green-bg);  color: var(--well-green-fg); }
+.well-orange { background: var(--well-orange-bg); color: var(--well-orange-fg); }
+.well-red    { background: var(--well-red-bg);    color: var(--well-red-fg); }
+
+/* Reveal-on-hover arrow (action rows / quick cards). */
+.gv-arrow { transition: transform .15s ease, opacity .15s ease; }
+.gv-hoverrow:hover .gv-arrow { transform: translateX(3px); }
+
+/* ── Growvia motion layer ──────────────────────────────────────────────
+   Lightweight, dependency-free. Every effect is transform/opacity only and
+   bails out under reduced-motion (JS hooks) or the media query below. */
+
+/* Blurred brand orbs behind the auth card (see CursorSpotlight). */
+.fx-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.5;
+  will-change: transform;
+  animation: fx-float 22s ease-in-out infinite;
+}
+@keyframes fx-float {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33%      { transform: translate3d(24px, -28px, 0) scale(1.06); }
+  66%      { transform: translate3d(-20px, 18px, 0) scale(0.96); }
+}
+
+/* Card / logo entrance for the auth shell. */
+@keyframes fx-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fx-rise { animation: fx-rise .6s cubic-bezier(.2,.7,.2,1) both; }
+
+@keyframes fx-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+.fx-bob { animation: fx-bob 4.5s ease-in-out infinite; }
+
+/* Slow drifting gradient for the hero headline. */
+@keyframes fx-gradient {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Sweeping shimmer used on the auth button while it is busy. */
+@keyframes fx-shimmer {
+  from { background-position: -160% 0; }
+  to   { background-position: 260% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-orb, .fx-rise, .fx-bob { animation: none !important; }
+}
+
+/* ── AI console theme (charcoal + Growvia blue) ─────────────────────────
+   Shared surface for the Gemini-backed features (Prompt Lab, Coach, trainer
+   tools, inline helpers). Deliberately dark to read as a distinct "AI" zone
+   inside the light dashboard. Accent switched from a warm clay tone → Growvia blue
+   so the AI tools stay on-brand; the --aic-clay* names are kept as the stable
+   accent tokens (now blue) to avoid churn across the components that use them. */
+:root {
+  --aic-canvas: #262624;   /* console background (charcoal — unchanged) */
+  --aic-surface: #1E1D1B;  /* inset fields / result / bubbles */
+  --aic-line: rgba(240, 230, 214, 0.11);
+  --aic-line-strong: rgba(240, 230, 214, 0.20);
+  --aic-text: #ECEAE3;     /* warm cream */
+  --aic-muted: #A3A096;
+  --aic-faint: #78756C;
+  --aic-clay: #3E93EC;                    /* Growvia blue — reserved for generate/send (was clay #D97757) */
+  --aic-clay-soft: #6FB0F2;               /* lighter blue for links / icons */
+  --aic-clay-tint: rgba(62, 147, 236, 0.16);
+  --aic-clay-on: #06182B;  /* dark navy text on the blue accent */
+}
+
+.aic { background: var(--aic-canvas); border: 1px solid var(--aic-line); border-radius: 16px; color: var(--aic-text); }
+.aic-lbl { font-size: 11.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--aic-faint); }
+.aic-field { background: var(--aic-surface); border: 1px solid var(--aic-line); border-radius: 12px; color: var(--aic-text); }
+.aic-field::placeholder { color: var(--aic-faint); }
+.aic-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border-radius: 999px; padding: 9px 16px; font-size: 13px; font-weight: 600; border: 1px solid transparent; cursor: pointer; transition: opacity .15s ease, background .15s ease; }
+.aic-btn:disabled { opacity: .4; cursor: default; }
+.aic-clay { background: var(--aic-clay); color: var(--aic-clay-on); }
+.aic-clay:hover:not(:disabled) { opacity: .92; }
+.aic-out { background: transparent; color: #DCD8CE; border-color: var(--aic-line-strong); }
+.aic-out:hover:not(:disabled) { background: rgba(240, 230, 214, 0.06); }
+.aic-btn-sm { padding: 5px 11px; font-size: 12px; }
+.aic-link { background: none; border: none; cursor: pointer; padding: 0; font-size: 12px; color: var(--aic-clay-soft); text-decoration: underline; display: inline-flex; align-items: center; gap: 4px; }
+.aic-caret { display: inline-block; width: 7px; height: 15px; background: var(--aic-clay); vertical-align: -2px; margin-left: 2px; animation: aic-blink 1s steps(1) infinite; }
+@keyframes aic-blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .aic-caret { animation: none; } }
+
+/* AI usage meter — a slim rolling-window quota bar, on-theme with the console. */
+.aic-meter-track { height: 5px; border-radius: 999px; background: var(--aic-line); overflow: hidden; }
+.aic-meter-fill { height: 100%; border-radius: 999px; background: var(--aic-clay); transition: width .35s ease; }
+.aic-meter-fill.is-low { background: #E8B45E; }   /* few runs left */
+.aic-meter-fill.is-empty { background: #E88B6B; } /* depleted — matches the error tint used elsewhere */
